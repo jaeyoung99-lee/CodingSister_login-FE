@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import api from "../utils/api";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const RegisterPage = () => {
   const [name, setName] = useState("");
@@ -81,6 +81,9 @@ const RegisterPage = () => {
         <Button className="button-primary" type="submit">
           회원가입
         </Button>
+        <div>
+          <Link to="/login">로그인 페이지로 돌아가기</Link>
+        </div>
       </Form>
     </div>
   );
