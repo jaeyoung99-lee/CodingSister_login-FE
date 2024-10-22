@@ -6,7 +6,12 @@ const TodoItem = ({ item, deleteItem, toggleComplete }) => {
     <Row>
       <Col xs={12}>
         <div className={`todo-item ${item.isComplete ? "item-complete" : ""}`}>
-          <div className="todo-content">{item.task}</div>
+          <div className="todo-content">
+            {item.task}{" "}
+            <span style={{ color: "gray", opacity: "40%", fontSize: "12px" }}>
+              by {item.author.name}
+            </span>
+          </div>
 
           <div>
             <button
