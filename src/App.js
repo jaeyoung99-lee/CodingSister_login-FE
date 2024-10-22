@@ -1,29 +1,50 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import TodoPage from "./pages/TodoPage";
 import RegisterPage from "./pages/RegisterPage";
 import { useEffect, useState } from "react";
+import api from "./utils/api";
+import PrivateRoute from "./route/PrivateRoute";
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
+
+  // 토큰을 통해 유저 정보를 가져온다
+  const getUser = async () => {
+    try {
+      const storedToken = sessionStorage.getItem("token");
+      if (storedToken) {
+        const response = await api.get("/user/me");
+        console.log("me response", response);
+        setUser(response.data.user);
+      }
+    } catch (error) {
+      setUser(null);
+    }
+  };
 
   useEffect(() => {
-    // sessionStorage에서 토큰을 확인하여 로그인 여부 판단
-    const token = sessionStorage.getItem("token");
-    setIsAuthenticated(token);
+    getUser();
   }, []);
 
   return (
     <Routes>
       <Route
         path="/"
-        element={isAuthenticated ? <TodoPage /> : <Navigate to="/login" />}
+        element={
+          <PrivateRoute user={user}>
+            <TodoPage />
+          </PrivateRoute>
+        }
       />
       <Route path="/register" element={<RegisterPage />} />
 
-      <Route path="/login" element={<LoginPage />} />
+      <Route
+        path="/login"
+        element={<LoginPage user={user} setUser={setUser} />}
+      />
     </Routes>
   );
 }
